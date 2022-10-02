@@ -1,7 +1,6 @@
 package worker
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -9,10 +8,52 @@ import (
 type Item interface {
 	// GetSerialNumber returns the serial number of the item. The serial number should be unique.
 	GetSerialNumber() string
-	// GetTimeOfStep returns the time of the item.
-	GetTimeOfStep(step string) time.Time
-	// GetSteps returns the all steps.
-	GetSteps() []string
+	// GetStep returns the step info of the specify setp.
+	GetStep(stepName string) (*Step, bool)
+	// GetStepsOrdering returns the all steps by order.
+	GetStepsOrdering() []string
+}
+
+// stepStatus is the status of the step
+type stepStatus string
+
+var (
+	StepSuccess stepStatus = "SUCCESS"
+	StepFail    stepStatus = "FAIL"
+)
+
+// Step includes the infomation of one step.
+type Step struct {
+	name      string
+	beginTime time.Time
+	endTime   time.Time
+	status    stepStatus
+}
+
+func (s *Step) GetName() string {
+	return s.name
+}
+
+func (s *Step) GetBeginTime() time.Time {
+	return s.beginTime
+}
+
+func (s *Step) GetEndTime() time.Time {
+	return s.endTime
+}
+
+func (s *Step) GetStatus() stepStatus {
+	return s.status
+}
+
+// NewStep returns a new step.
+func NewStep(name string, beginTime time.Time, endTime time.Time, status stepStatus) *Step {
+	return &Step{
+		name:      name,
+		beginTime: beginTime,
+		endTime:   endTime,
+		status:    status,
+	}
 }
 
 type PartItem struct {
@@ -20,35 +61,31 @@ type PartItem struct {
 	serialNumber string
 	// TimeOfStep is the time of the item.
 	stepsOrdering []string
-	// stepTime is the time of the item.
-	stepTime map[string]time.Time
+	// steps is the map of the each step.
+	steps map[string]*Step
 }
 
-func NewPartItem(serialNumber string, stepsOrdering []string, times []time.Time) (*PartItem, error) {
-	item := &PartItem{
+func NewPartItem(serialNumber string, stepsOrdering []string) *PartItem {
+	return &PartItem{
 		serialNumber:  serialNumber,
 		stepsOrdering: stepsOrdering,
-		stepTime:      make(map[string]time.Time),
+		steps:         make(map[string]*Step),
 	}
+}
 
-	if len(stepsOrdering) != len(times) {
-		return nil, fmt.Errorf("the length of stepsOrdering and times should be the same")
-	}
-
-	for idx, step := range stepsOrdering {
-		item.stepTime[step] = times[idx]
-	}
-	return item, nil
+func (item *PartItem) SetStep(stepName string, step *Step) {
+	item.steps[stepName] = step
 }
 
 func (item *PartItem) GetSerialNumber() string {
 	return item.serialNumber
 }
 
-func (item *PartItem) GetTimeOfStep(step string) time.Time {
-	return item.stepTime[step]
+func (item *PartItem) GetStep(stepName string) (*Step, bool) {
+	step, ok := item.steps[stepName]
+	return step, ok
 }
 
-func (item *PartItem) GetSteps() []string {
+func (item *PartItem) GetStepsOrdering() []string {
 	return item.stepsOrdering
 }
