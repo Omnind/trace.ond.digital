@@ -23,8 +23,10 @@ const (
 
 var (
 	flags struct {
-		// config file path is the path to the config file that we will read.
+		// configFilePath is the path to the config file that we will read.
 		configFilePath string
+		// inputFilesPath is the folder to the input file that we will read.
+		inputFilesPath string
 		// output file path is the path to the output file that we will write.
 		ouputFilePath string
 		// debug mode is a flag that will enable debug mode.
@@ -58,6 +60,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.PersistentFlags().StringVar(&flags.configFilePath, "config", "", "config file path")
+	rootCmd.PersistentFlags().StringVar(&flags.inputFilesPath, "input", "", "input files folder")
 	rootCmd.PersistentFlags().StringVar(&flags.ouputFilePath, "out", "", "output file path")
 	rootCmd.PersistentFlags().BoolVar(&flags.debug, "debug", false, "debug mode")
 }

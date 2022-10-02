@@ -1,0 +1,35 @@
+{
+    "name_map":{
+        "cnc-in": "CNC Input",
+        "epic": "EPIC Treatment",
+        "im": "Insert Molding",
+        "epoxy": "Epoxy",
+        "2d-bc-le":"2D Barcode LE",
+        "ptm":"PTM",
+        "polish-qc": "Polish QC",
+        "cnc3-qc":"CNC 3 QC",
+        "ano":"Ano",
+        "oled":"OLED",
+        "color":"Color&Gloss",
+        "fg-bc-le":"FG Barcode LE",
+        "alt":"ALT",
+        "fqc":"FQC"
+    },
+    "step_order":[
+        "CNC Input",
+        "EPIC Treatment",
+        "Insert Molding",
+        "Epoxy",
+        "2D Barcode LE",
+        "PTM",
+        "Polish QC",
+        "CNC 3 QC",
+        "Ano",
+        "OLED",
+        "Color&Gloss",
+        "FG Barcode LE",
+        "ALT",
+        "FQC"
+    ],
+    "time_interval":24
+}
