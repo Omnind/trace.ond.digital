@@ -13,21 +13,21 @@ const (
 	CollectResultInterval = 300 * time.Millisecond
 )
 
+type ToStepIntervalSpent map[string][]int
+
+type StepsTimeCalculator map[string]ToStepIntervalSpent
+
 // resultSet is the result of the collector.
-type resultSet struct {
+type ResultSet struct {
 	// stepsTimeNumber is the number of time interval of steps.
-	stepsTimeNumber stepsTimeCalculator
+	StepsTimeNumber StepsTimeCalculator
 }
 
-type toStepIntervalSpent map[string][]int
-
-type stepsTimeCalculator map[string]toStepIntervalSpent
-
 // initByStepsOrdering will init the stepsTimeNumber by the steps ordering.
-func (s stepsTimeCalculator) initByStepsOrdering(stepsOrdering []string, nInterval int) {
+func (s StepsTimeCalculator) initByStepsOrdering(stepsOrdering []string, nInterval int) {
 	for i := 0; i < len(stepsOrdering); i++ {
 		fromStep := stepsOrdering[i]
-		s[fromStep] = make(toStepIntervalSpent)
+		s[fromStep] = make(ToStepIntervalSpent)
 		for j := i; j < len(stepsOrdering); j++ {
 			toStep := stepsOrdering[j]
 			// We make the slice with length `nInterval+1` because we should record the times that item used more than interval * nInterval.
@@ -41,11 +41,11 @@ type Master struct {
 	nMapWorker    int
 	errChan       []chan error
 	data          []chan []Item
-	collect       []chan *resultSet
+	collect       []chan *ResultSet
 	wg            *sync.WaitGroup
 	workerAlive   []bool
 	aliveWorker   int
-	result        *resultSet
+	result        *ResultSet
 	collectorDone chan struct{}
 	finished      chan struct{}
 }
@@ -54,23 +54,23 @@ func NewDefaultMaster() *Master {
 	return &Master{
 		nMapWorker:  MapWorkerNumber,
 		aliveWorker: MapWorkerNumber,
-		result: &resultSet{
-			stepsTimeNumber: make(stepsTimeCalculator),
+		result: &ResultSet{
+			StepsTimeNumber: make(StepsTimeCalculator),
 		},
 	}
 }
 
-func (m *Master) Run(items []Item, stepOrdering []string, nHoursInOneInterval, nInterval int) *resultSet {
+func (m *Master) Run(items []Item, stepOrdering []string, nHoursInOneInterval, nInterval int) *ResultSet {
 	if len(items) == 0 {
 		return nil
 	}
 	// We should init the result before we start the worker.
-	m.result.stepsTimeNumber.initByStepsOrdering(stepOrdering, nInterval)
+	m.result.StepsTimeNumber.initByStepsOrdering(stepOrdering, nInterval)
 
 	// We prepare the worker first.
 	m.errChan = make([]chan error, m.nMapWorker)
 	m.data = make([]chan []Item, m.nMapWorker)
-	m.collect = make([]chan *resultSet, m.nMapWorker)
+	m.collect = make([]chan *ResultSet, m.nMapWorker)
 	m.wg = &sync.WaitGroup{}
 	m.workerAlive = make([]bool, m.nMapWorker)
 	m.collectorDone = make(chan struct{})
@@ -88,7 +88,7 @@ func (m *Master) Run(items []Item, stepOrdering []string, nHoursInOneInterval, n
 	for i := 0; i < m.nMapWorker; i++ {
 		m.errChan[i] = make(chan error, 1)
 		m.data[i] = make(chan []Item, ChannelBufferSize)
-		m.collect[i] = make(chan *resultSet, ChannelBufferSize)
+		m.collect[i] = make(chan *ResultSet, ChannelBufferSize)
 		m.workerAlive[i] = true
 		maper := newMaper(i, m.errChan[i], m.wg, m.data[i], m.collect[i], nHoursInOneInterval, nInterval)
 		m.wg.Add(1)
@@ -162,10 +162,10 @@ func (m *Master) Wait() {
 			if middleData == nil {
 				continue
 			}
-			for fromStep, toStepTimeSpent := range middleData.stepsTimeNumber {
+			for fromStep, toStepTimeSpent := range middleData.StepsTimeNumber {
 				for toStep, number := range toStepTimeSpent {
 					for i, v := range number {
-						m.result.stepsTimeNumber[fromStep][toStep][i] += v
+						m.result.StepsTimeNumber[fromStep][toStep][i] += v
 					}
 				}
 			}
@@ -186,10 +186,10 @@ func (m *Master) runColletor() {
 					if middleData == nil {
 						continue
 					}
-					for fromStep, toStepTimeSpent := range middleData.stepsTimeNumber {
+					for fromStep, toStepTimeSpent := range middleData.StepsTimeNumber {
 						for toStep, number := range toStepTimeSpent {
 							for i, v := range number {
-								m.result.stepsTimeNumber[fromStep][toStep][i] += v
+								m.result.StepsTimeNumber[fromStep][toStep][i] += v
 							}
 						}
 					}
@@ -206,10 +206,10 @@ func (m *Master) runColletor() {
 					if middleData == nil {
 						continue
 					}
-					for fromStep, toStepTimeSpent := range middleData.stepsTimeNumber {
+					for fromStep, toStepTimeSpent := range middleData.StepsTimeNumber {
 						for toStep, number := range toStepTimeSpent {
 							for i, v := range number {
-								m.result.stepsTimeNumber[fromStep][toStep][i] += v
+								m.result.StepsTimeNumber[fromStep][toStep][i] += v
 							}
 						}
 					}

@@ -29,13 +29,13 @@ type maper struct {
 	worker
 	// Data panel.
 	data                 <-chan []Item
-	middleResultColleter chan<- *resultSet
+	middleResultColleter chan<- *ResultSet
 	nHoursInOneInterval  int
 	nInterval            int
 }
 
 // newMaper returns a new maper.
-func newMaper(id int, errChan chan<- error, wg *sync.WaitGroup, data <-chan []Item, middleResultColleter chan<- *resultSet, nHoursInOneInterval, nInterval int) *maper {
+func newMaper(id int, errChan chan<- error, wg *sync.WaitGroup, data <-chan []Item, middleResultColleter chan<- *ResultSet, nHoursInOneInterval, nInterval int) *maper {
 	return &maper{
 		worker:               newWorker(id, errChan, wg),
 		data:                 data,
@@ -68,14 +68,14 @@ func (m *maper) run(stepOrdering []string) {
 	}
 }
 
-func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string, items []Item) *resultSet {
-	mr := &resultSet{
-		stepsTimeNumber: make(map[string]toStepIntervalSpent),
+func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string, items []Item) *ResultSet {
+	mr := &ResultSet{
+		StepsTimeNumber: make(map[string]ToStepIntervalSpent),
 	}
 	if len(items) == 0 {
 		return nil
 	}
-	mr.stepsTimeNumber.initByStepsOrdering(stepsOrdering, nInterval)
+	mr.StepsTimeNumber.initByStepsOrdering(stepsOrdering, nInterval)
 	for _, item := range items {
 		nStep := len(stepsOrdering)
 		for i := 0; i < nStep; i++ {
@@ -96,7 +96,7 @@ func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string,
 				endTime := toStepInfo.GetEndTime()
 				tmp := endTime.Sub(beginTime)
 				timeSpentInterval := int(tmp.Seconds() / float64(nHouesInOneInterval*3600 /* to second*/))
-				mr.stepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
+				mr.StepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
 			}
 		}
 	}

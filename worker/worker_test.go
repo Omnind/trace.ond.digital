@@ -15,7 +15,7 @@ func TestMaster(t *testing.T) {
 		generateSerialNumber func(i int) string
 		// generateStepTime is a function to generate the step time. It's responsible to generate the final step end time.
 		setStepsTime func(stepsOrdering []string, item *PartItem)
-		want         *resultSet
+		want         *ResultSet
 	}{
 		{
 			stepOrdering:         []string{"STEP-A", "STEP-B", "STEP-C"},
@@ -24,8 +24,8 @@ func TestMaster(t *testing.T) {
 			nHouesInOneInterval:  24,
 			generateSerialNumber: commonGenerateSerialNumber,
 			setStepsTime:         commonSetStepsTime,
-			want: &resultSet{
-				stepsTimeNumber: map[string]toStepIntervalSpent{
+			want: &ResultSet{
+				StepsTimeNumber: map[string]ToStepIntervalSpent{
 					"STEP-A": map[string][]int{
 						"STEP-A": {0, 5, 0, 0, 0, 0, 0, 0},
 						"STEP-B": {0, 0, 5, 0, 0, 0, 0, 0},

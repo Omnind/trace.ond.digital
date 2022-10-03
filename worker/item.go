@@ -10,6 +10,8 @@ type Item interface {
 	GetSerialNumber() string
 	// GetStep returns the step info of the specify setp.
 	GetStep(stepName string) (*Step, bool)
+	// GetAllSteps returns the steps info of the item.
+	GetAllSteps() []*Step
 	// GetStepsOrdering returns the all steps by order.
 	GetStepsOrdering() []string
 }
@@ -88,4 +90,12 @@ func (item *PartItem) GetStep(stepName string) (*Step, bool) {
 
 func (item *PartItem) GetStepsOrdering() []string {
 	return item.stepsOrdering
+}
+
+func (item *PartItem) GetAllSteps() []*Step {
+	steps := make([]*Step, 0, len(item.steps))
+	for _, step := range item.steps {
+		steps = append(steps, step)
+	}
+	return steps
 }
