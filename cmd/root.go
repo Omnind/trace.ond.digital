@@ -54,6 +54,10 @@ var rootCmd = &cobra.Command{
 	Long:  `Apple Data CLI is a command line tool to process Apple part data.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		printGreeting()
+		// We should modify the logger level to debug if the debug flag is set.
+		if flags.debug {
+			logger.SetLevel(zap.DebugLevel)
+		}
 		start()
 	},
 }
