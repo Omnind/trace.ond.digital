@@ -25,7 +25,7 @@ func TestMaster(t *testing.T) {
 			generateSerialNumber: commonGenerateSerialNumber,
 			setStepsTime:         commonSetStepsTime,
 			want: &ResultSet{
-				StepsTimeNumber: map[string]ToStepIntervalSpent{
+				PassStepsTimeNumber: map[string]ToStepIntervalSpent{
 					"STEP-A": map[string][]int{
 						"STEP-A": {0, 5, 0, 0, 0, 0, 0, 0},
 						"STEP-B": {0, 0, 5, 0, 0, 0, 0, 0},

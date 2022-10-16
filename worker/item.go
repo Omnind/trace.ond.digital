@@ -20,8 +20,8 @@ type Item interface {
 type stepStatus string
 
 var (
-	StepSuccess stepStatus = "SUCCESS"
-	StepFail    stepStatus = "FAIL"
+	StepPass stepStatus = "PASS"
+	StepFail stepStatus = "FAIL"
 )
 
 // Step includes the infomation of one step.

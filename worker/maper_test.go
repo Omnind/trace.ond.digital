@@ -27,7 +27,7 @@ func TestHandleItems(t *testing.T) {
 			generateSerialNumber: commonGenerateSerialNumber,
 			setStepsTime:         commonSetStepsTime,
 			want: &ResultSet{
-				StepsTimeNumber: map[string]ToStepIntervalSpent{
+				PassStepsTimeNumber: map[string]ToStepIntervalSpent{
 					"STEP-A": map[string][]int{
 						"STEP-A": {0, 1, 0, 0, 0, 0, 0, 0},
 						"STEP-B": {0, 0, 1, 0, 0, 0, 0, 0},
@@ -39,6 +39,20 @@ func TestHandleItems(t *testing.T) {
 					},
 					"STEP-C": map[string][]int{
 						"STEP-C": {0, 1, 0, 0, 0, 0, 0, 0},
+					},
+				},
+				FailStepsTimeNumber: map[string]ToStepIntervalSpent{
+					"STEP-A": map[string][]int{
+						"STEP-A": {0, 0, 0, 0, 0, 0, 0, 0},
+						"STEP-B": {0, 0, 0, 0, 0, 0, 0, 0},
+						"STEP-C": {0, 0, 0, 0, 0, 0, 0, 0},
+					},
+					"STEP-B": map[string][]int{
+						"STEP-B": {0, 0, 0, 0, 0, 0, 0, 0},
+						"STEP-C": {0, 0, 0, 0, 0, 0, 0, 0},
+					},
+					"STEP-C": map[string][]int{
+						"STEP-C": {0, 0, 0, 0, 0, 0, 0, 0},
 					},
 				},
 			},
@@ -74,7 +88,7 @@ func commonSetStepsTime(stepsOrdering []string, item *PartItem) {
 	beginTime := baseTime
 	for _, step := range stepsOrdering {
 		endTime := beginTime.Add(time.Duration(24) * time.Hour)
-		item.SetStep(step, NewStep(step, beginTime, endTime, StepSuccess))
+		item.SetStep(step, NewStep(step, beginTime, endTime, StepPass))
 		beginTime = endTime
 	}
 }

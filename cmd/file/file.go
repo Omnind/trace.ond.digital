@@ -84,9 +84,13 @@ func ReadFileAndConvertToItem(path string, stepOrdering []string, stepShortName,
 			return
 		}
 		// TODO(zp): handle the status
-		_ = record[statusIdx]
+		statusStr := record[statusIdx]
+		status := worker.StepFail
+		if statusStr == "passed" {
+			status = worker.StepPass
+		}
 		item := worker.NewPartItem(serialNumber, stepOrdering)
-		stepInfo := worker.NewStep(fullStepName, beginTime, endTime, worker.StepSuccess)
+		stepInfo := worker.NewStep(fullStepName, beginTime, endTime, status)
 		item.SetStep(fullStepName, stepInfo)
 		itemMap[serialNumber] = item
 	}
@@ -114,12 +118,7 @@ func getSerialNumberColumnName() string {
 }
 
 func getStatusColumnName(shortStepName string) string {
-	var specs []string
-	specs = append(specs, shortStepName)
-	specs = append(specs, "insight")
-	specs = append(specs, "test_attributes")
-	specs = append(specs, "test_result")
-	return strings.Join(specs, ".")
+	return "result"
 }
 
 func normalizeTime(timeStr string) (time.Time, error) {

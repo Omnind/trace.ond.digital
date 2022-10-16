@@ -200,7 +200,7 @@ func writeResult(resultSet *worker.ResultSet, fullStepOrdering []string, outputF
 	// ProjectCode,FromStep,ToStep,1,2,3,4,5,6,7,> 7
 	// We write the header first.
 	header := []string{
-		"ProjectCode", "FromStep", "ToStep",
+		"ProjectCode", "FromStep", "ToStep", "Status",
 		"1-Days", "2-Days", "3-Days",
 		"4-Days", "5-Days", "6-Days",
 		"7-Days", ">7-Days",
@@ -213,13 +213,27 @@ func writeResult(resultSet *worker.ResultSet, fullStepOrdering []string, outputF
 		fromStep := fullStepOrdering[i]
 		for j := i; j < len(fullStepOrdering); j++ {
 			toStep := fullStepOrdering[j]
-			timeSpentIntervals := resultSet.StepsTimeNumber[fromStep][toStep]
+			passTimeSpentIntervals := resultSet.PassStepsTimeNumber[fromStep][toStep]
 			row := make([]string, 0, len(header))
 			//TODO(zp): make projectCode configurable.
 			row = append(row, "N199")
 			row = append(row, fromStep)
 			row = append(row, toStep)
-			for _, interval := range timeSpentIntervals {
+			row = append(row, "passed")
+			for _, interval := range passTimeSpentIntervals {
+				row = append(row, strconv.Itoa(interval))
+			}
+			if err := writer.Write(row); err != nil {
+				return err
+			}
+			failTimeSpentIntervals := resultSet.FailStepsTimeNumber[fromStep][toStep]
+			row = make([]string, 0, len(header))
+			//TODO(zp): make projectCode configurable.
+			row = append(row, "N199")
+			row = append(row, fromStep)
+			row = append(row, toStep)
+			row = append(row, "failed")
+			for _, interval := range failTimeSpentIntervals {
 				row = append(row, strconv.Itoa(interval))
 			}
 			if err := writer.Write(row); err != nil {
