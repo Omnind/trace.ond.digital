@@ -20,7 +20,8 @@ type StepsTimeCalculator map[string]ToStepIntervalSpent
 // resultSet is the result of the collector.
 type ResultSet struct {
 	// stepsTimeNumber is the number of time interval of steps.
-	StepsTimeNumber StepsTimeCalculator
+	PassStepsTimeNumber StepsTimeCalculator
+	FailStepsTimeNumber StepsTimeCalculator
 }
 
 // initByStepsOrdering will init the stepsTimeNumber by the steps ordering.
@@ -55,7 +56,8 @@ func NewDefaultMaster() *Master {
 		nMapWorker:  MapWorkerNumber,
 		aliveWorker: MapWorkerNumber,
 		result: &ResultSet{
-			StepsTimeNumber: make(StepsTimeCalculator),
+			PassStepsTimeNumber: make(StepsTimeCalculator),
+			FailStepsTimeNumber: make(StepsTimeCalculator),
 		},
 	}
 }
@@ -65,7 +67,8 @@ func (m *Master) Run(items []Item, stepOrdering []string, nHoursInOneInterval, n
 		return nil
 	}
 	// We should init the result before we start the worker.
-	m.result.StepsTimeNumber.initByStepsOrdering(stepOrdering, nInterval)
+	m.result.PassStepsTimeNumber.initByStepsOrdering(stepOrdering, nInterval)
+	m.result.FailStepsTimeNumber.initByStepsOrdering(stepOrdering, nInterval)
 
 	// We prepare the worker first.
 	m.errChan = make([]chan error, m.nMapWorker)
@@ -162,10 +165,17 @@ func (m *Master) Wait() {
 			if middleData == nil {
 				continue
 			}
-			for fromStep, toStepTimeSpent := range middleData.StepsTimeNumber {
+			for fromStep, toStepTimeSpent := range middleData.PassStepsTimeNumber {
 				for toStep, number := range toStepTimeSpent {
 					for i, v := range number {
-						m.result.StepsTimeNumber[fromStep][toStep][i] += v
+						m.result.PassStepsTimeNumber[fromStep][toStep][i] += v
+					}
+				}
+			}
+			for fromStep, toStepTimeSpent := range middleData.FailStepsTimeNumber {
+				for toStep, number := range toStepTimeSpent {
+					for i, v := range number {
+						m.result.FailStepsTimeNumber[fromStep][toStep][i] += v
 					}
 				}
 			}
@@ -186,10 +196,17 @@ func (m *Master) runColletor() {
 					if middleData == nil {
 						continue
 					}
-					for fromStep, toStepTimeSpent := range middleData.StepsTimeNumber {
+					for fromStep, toStepTimeSpent := range middleData.PassStepsTimeNumber {
 						for toStep, number := range toStepTimeSpent {
 							for i, v := range number {
-								m.result.StepsTimeNumber[fromStep][toStep][i] += v
+								m.result.PassStepsTimeNumber[fromStep][toStep][i] += v
+							}
+						}
+					}
+					for fromStep, toStepTimeSpent := range middleData.FailStepsTimeNumber {
+						for toStep, number := range toStepTimeSpent {
+							for i, v := range number {
+								m.result.FailStepsTimeNumber[fromStep][toStep][i] += v
 							}
 						}
 					}
@@ -206,10 +223,17 @@ func (m *Master) runColletor() {
 					if middleData == nil {
 						continue
 					}
-					for fromStep, toStepTimeSpent := range middleData.StepsTimeNumber {
+					for fromStep, toStepTimeSpent := range middleData.PassStepsTimeNumber {
 						for toStep, number := range toStepTimeSpent {
 							for i, v := range number {
-								m.result.StepsTimeNumber[fromStep][toStep][i] += v
+								m.result.PassStepsTimeNumber[fromStep][toStep][i] += v
+							}
+						}
+					}
+					for fromStep, toStepTimeSpent := range middleData.FailStepsTimeNumber {
+						for toStep, number := range toStepTimeSpent {
+							for i, v := range number {
+								m.result.FailStepsTimeNumber[fromStep][toStep][i] += v
 							}
 						}
 					}

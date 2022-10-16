@@ -70,12 +70,14 @@ func (m *maper) run(stepOrdering []string) {
 
 func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string, items []Item) *ResultSet {
 	mr := &ResultSet{
-		StepsTimeNumber: make(map[string]ToStepIntervalSpent),
+		PassStepsTimeNumber: make(map[string]ToStepIntervalSpent),
+		FailStepsTimeNumber: make(StepsTimeCalculator),
 	}
 	if len(items) == 0 {
 		return nil
 	}
-	mr.StepsTimeNumber.initByStepsOrdering(stepsOrdering, nInterval)
+	mr.PassStepsTimeNumber.initByStepsOrdering(stepsOrdering, nInterval)
+	mr.FailStepsTimeNumber.initByStepsOrdering(stepsOrdering, nInterval)
 	for _, item := range items {
 		nStep := len(stepsOrdering)
 		for i := 0; i < nStep; i++ {
@@ -96,7 +98,11 @@ func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string,
 				endTime := toStepInfo.GetEndTime()
 				tmp := endTime.Sub(beginTime)
 				timeSpentInterval := int(tmp.Seconds() / float64(nHouesInOneInterval*3600 /* to second*/))
-				mr.StepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
+				if fromStepInfo.GetStatus() == StepPass && toStepInfo.GetStatus() == StepPass {
+					mr.PassStepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
+				} else {
+					mr.FailStepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
+				}
 			}
 		}
 	}

@@ -17,6 +17,8 @@ type ServerConfig struct {
 	StepOrder []string `json:"step_order"`
 	// StepOrderShort is the list of step ordering in short name.
 	StepOrderShort []string
+	// StatusColumnName is the name of the column for the status.
+	StatusColumnName string `json:"status_column_name"`
 }
 
 // NewConfigFromFile creates a new ServerConfig from a file.

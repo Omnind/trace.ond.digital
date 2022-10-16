@@ -31,5 +31,6 @@
         "ALT",
         "FQC"
     ],
+    "status_column_name": "result",
     "time_interval":24
 }
