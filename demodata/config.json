@@ -1,36 +1,90 @@
 {
-    "name_map":{
-        "cnc-in": "CNC Input",
-        "epic": "EPIC Treatment",
-        "im": "Insert Molding",
-        "epoxy": "Epoxy",
-        "2d-bc-le":"2D Barcode LE",
-        "ptm":"PTM",
-        "polish-qc": "Polish QC",
-        "cnc3-qc":"CNC 3 QC",
-        "ano":"Ano",
-        "oleo":"OLEO",
-        "color":"Color&Gloss",
-        "fg-bc-le":"FG Barcode LE",
-        "alt":"ALT",
-        "fqc":"FQC"
-    },
-    "step_order":[
-        "CNC Input",
-        "EPIC Treatment",
-        "Insert Molding",
-        "Epoxy",
-        "2D Barcode LE",
-        "PTM",
-        "Polish QC",
-        "CNC 3 QC",
-        "Ano",
-        "OLEO",
-        "Color&Gloss",
-        "FG Barcode LE",
-        "ALT",
-        "FQC"
-    ],
-    "status_column_name": "result",
-    "time_interval":24
+    "StepMeta":[
+            {
+                "FullStepName": "CNC Input",
+                "ShortStepName": "cnc",
+                "StepOrder": 1,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_cnc-in_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "EPIC Treatment",
+                "ShortStepName": "epic",
+                "StepOrder": 2,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_epic_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "Insert Molding",
+                "ShortStepName": "insert",
+                "StepOrder": 3,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_im-in_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "Epoxy",
+                "ShortStepName": "epoxy",
+                "StepOrder": 4,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_epoxy-in_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "2D Barcode LE",
+                "ShortStepName": "2d-bc-le",
+                "StepOrder": 5,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_2d-bc-le-in_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "PTM",
+                "ShortStepName": "ptm",
+                "StepOrder": 6,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_ptm-in_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "Polish QC",
+                "ShortStepName": "polish",
+                "StepOrder": 7,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_polish-qc-in_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "CNC 3 QC",
+                "ShortStepName": "cnc3-qc",
+                "StepOrder": 8,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_cnc3-qc_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "Ano",
+                "ShortStepName": "ano",
+                "StepOrder": 9,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_ano_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "OLEO",
+                "ShortStepName": "oleo",
+                "StepOrder": 10,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_oleo_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "Color&Gloss",
+                "ShortStepName": "color",
+                "StepOrder": 11,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_color_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "FG Barcode LE",
+                "ShortStepName": "fg-bc-le",
+                "StepOrder": 12,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_fg-bc-le_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "ALT",
+                "ShortStepName": "alt",
+                "StepOrder": 13,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_alt-in_2022-06-20_2022-10-20.csv"
+            },
+            {
+                "FullStepName": "FQC",
+                "ShortStepName": "fqc",
+                "StepOrder": 14,
+                "FilePath":"demodata/large/LDG_N199_Housing TI_fqc-in_2022-06-20_2022-10-20.csv"
+            }
+        ],
+    "StatusColumnName": "result",
+    "TimeInterval":24
 }

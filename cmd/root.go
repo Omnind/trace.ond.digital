@@ -10,11 +10,8 @@ import (
 	"appledata/worker"
 	"encoding/csv"
 	"fmt"
-	"io/ioutil"
 	"os"
-	"path/filepath"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -93,34 +90,15 @@ func start() {
 		logger.Error("failed to read config file", zap.Error(err))
 		return
 	}
-	// We should read all the csv file in the input folder.
-	fileInfos, err := ioutil.ReadDir(flags.inputFilesPath)
-	if err != nil {
-		logger.Error("Failed to read input folder", zap.String("folder path", flags.inputFilesPath), zap.Error(err))
-		return
-	}
 
+	metaList := config.StepMetas
 	readFileWg := sync.WaitGroup{}
-	stepShortName2FilePath := make(map[string]string)
-	for _, fileInfo := range fileInfos {
-		if fileInfo.IsDir() || !strings.HasSuffix(fileInfo.Name(), ".csv") {
-			// It's ok to skip the folder because we only need to read the csv file.
-			continue
-		}
-		for _, stepShortName := range config.StepOrderShort {
-			need := convertStepNameToFileName(stepShortName)
-			if fileInfo.Name() == need {
-				stepShortName2FilePath[stepShortName] = filepath.Join(flags.inputFilesPath, fileInfo.Name())
-				break
-			}
-		}
-	}
-	itemPartMapChan := make(chan map[string]worker.Item, len(stepShortName2FilePath))
-	errChan := make(chan error, len(stepShortName2FilePath))
+	itemPartMapChan := make(chan map[string]worker.Item, len(metaList))
+	errChan := make(chan error, len(metaList))
 	defer close(errChan)
-	for stepShortName, filePath := range stepShortName2FilePath {
+	for _, meta := range metaList {
 		readFileWg.Add(1)
-		go file.ReadFileAndConvertToItem(filePath, config.StepOrder, stepShortName, config.NameMap[stepShortName], itemPartMapChan, errChan, &readFileWg)
+		go file.ReadFileAndConvertToItem(meta.FilePath, config.StepOrder, meta.ShortStepName, meta.FullStepName, itemPartMapChan, errChan, &readFileWg)
 		time.Sleep(300 * time.Millisecond)
 	}
 	readFileWg.Wait()
@@ -165,17 +143,6 @@ func start() {
 		return
 	}
 
-}
-
-func convertStepNameToFileName(stepShortName string) string {
-	specs := []string{
-		"raw-data",
-		"download",
-		"N199",
-		"Housing TI-LDG",
-		stepShortName,
-	}
-	return strings.Join(specs, "-") + ".csv"
 }
 
 func flattenItemMap(itemMap map[string]worker.Item) []worker.Item {
