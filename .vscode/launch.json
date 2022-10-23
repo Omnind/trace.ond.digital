@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/main.go",
-            "args": ["--config=${workspaceFolder}/demodata/config.json","--input=${workspaceFolder}/demodata/simple","--out=${workspaceFolder}/test_out.csv --debug"]
+            "args": ["--config=${workspaceFolder}/demodata/config.json","--out=${workspaceFolder}/test_out.csv --debug"]
         }
     ]
 }

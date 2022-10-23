@@ -98,7 +98,7 @@ func start() {
 	defer close(errChan)
 	for _, meta := range metaList {
 		readFileWg.Add(1)
-		go file.ReadFileAndConvertToItem(meta.FilePath, config.StepOrder, meta.ShortStepName, meta.FullStepName, itemPartMapChan, errChan, &readFileWg)
+		go file.ReadFileAndConvertToItem(meta.FilePath, config.StepOrder, meta.FullStepName, meta.ResultColumnName, meta.BeginTimeColumnName, meta.StopTimeColumnName, itemPartMapChan, errChan, &readFileWg)
 		time.Sleep(300 * time.Millisecond)
 	}
 	readFileWg.Wait()
@@ -168,6 +168,7 @@ func writeResult(resultSet *worker.ResultSet, fullStepOrdering []string, outputF
 	// We write the header first.
 	header := []string{
 		"ProjectCode", "FromStep", "ToStep", "Status",
+		"Error Intervals",
 		"1-Days", "2-Days", "3-Days",
 		"4-Days", "5-Days", "6-Days",
 		"7-Days", ">7-Days",

@@ -14,7 +14,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func ReadFileAndConvertToItem(path string, stepOrdering []string, stepShortName, fullStepName string, result chan<- map[string]worker.Item, errChan chan<- error, wg *sync.WaitGroup) {
+func ReadFileAndConvertToItem(path string, stepOrdering []string, fullStepName, resultColumnName, beginTimeColumnName, stopTimeColumnName string, result chan<- map[string]worker.Item, errChan chan<- error, wg *sync.WaitGroup) {
 	defer wg.Done()
 	file, err := os.Open(path)
 	if err != nil {
@@ -35,9 +35,6 @@ func ReadFileAndConvertToItem(path string, stepOrdering []string, stepShortName,
 	}
 
 	serialNumberColumnName := getSerialNumberColumnName()
-	beginTimeColumnName := getTimeColumnName(stepShortName, true)
-	endTimeColumnName := getTimeColumnName(stepShortName, false)
-	statusColumnName := getStatusColumnName(stepShortName)
 	var serialNumberIdx int
 	var beginTimeIdx int
 	var endTimeIdx int
@@ -50,9 +47,9 @@ func ReadFileAndConvertToItem(path string, stepOrdering []string, stepShortName,
 			serialNumberIdx = i
 		} else if columnName == beginTimeColumnName {
 			beginTimeIdx = i
-		} else if columnName == endTimeColumnName {
+		} else if columnName == stopTimeColumnName {
 			endTimeIdx = i
-		} else if columnName == statusColumnName {
+		} else if columnName == resultColumnName {
 			statusIdx = i
 		} else {
 			logger.Info("not handle column", zap.String("column name", columnName))

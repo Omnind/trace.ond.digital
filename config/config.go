@@ -9,10 +9,13 @@ import (
 )
 
 type StepMeta struct {
-	FullStepName  string `json:"FullStepName"`
-	ShortStepName string `json:"ShortStepName"`
-	StepOrder     int    `json:"StepOrder"`
-	FilePath      string `json:"FilePath"`
+	FullStepName        string `json:"FullStepName"`
+	ShortStepName       string `json:"ShortStepName"`
+	StepOrder           int    `json:"StepOrder"`
+	FilePath            string `json:"FilePath"`
+	ResultColumnName    string `json:"ResultColumnName"`
+	BeginTimeColumnName string `json:"BeginTimeColumnName"`
+	StopTimeColumnName  string `json:"StopTimeColumnName"`
 }
 
 // ServerConfig is the configuration for the apd.

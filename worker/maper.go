@@ -78,6 +78,7 @@ func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string,
 	}
 	mr.PassStepsTimeNumber.initByStepsOrdering(stepsOrdering, nInterval)
 	mr.FailStepsTimeNumber.initByStepsOrdering(stepsOrdering, nInterval)
+
 	for _, item := range items {
 		nStep := len(stepsOrdering)
 		for i := 0; i < nStep; i++ {
@@ -98,13 +99,29 @@ func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string,
 				endTime := toStepInfo.GetEndTime()
 				tmp := endTime.Sub(beginTime)
 				timeSpentInterval := int(tmp.Seconds() / float64(nHouesInOneInterval*3600 /* to second*/))
+				timeSpentInterval = min(timeSpentInterval, nInterval)
+				timeSpentInterval = max(timeSpentInterval, 0)
 				if fromStepInfo.GetStatus() == StepPass && toStepInfo.GetStatus() == StepPass {
-					mr.PassStepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
+					mr.PassStepsTimeNumber[fromStep][toStep][timeSpentInterval+1] += 1
 				} else {
-					mr.FailStepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
+					mr.FailStepsTimeNumber[fromStep][toStep][timeSpentInterval+1] += 1
 				}
 			}
 		}
 	}
 	return mr
+}
+
+func min(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
