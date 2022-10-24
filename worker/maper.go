@@ -100,7 +100,9 @@ func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string,
 				tmp := endTime.Sub(beginTime)
 				timeSpentInterval := int(tmp.Seconds() / float64(nHouesInOneInterval*3600 /* to second*/))
 				timeSpentInterval = min(timeSpentInterval, nInterval)
-				timeSpentInterval = max(timeSpentInterval, 0)
+				if timeSpentInterval < 0 {
+					continue
+				}
 				if fromStepInfo.GetStatus() == StepPass && toStepInfo.GetStatus() == StepPass {
 					mr.PassStepsTimeNumber[fromStep][toStep][timeSpentInterval+1] += 1
 				} else {
