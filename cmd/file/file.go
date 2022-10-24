@@ -69,16 +69,20 @@ func ReadFileAndConvertToItem(path string, stepOrdering []string, fullStepName, 
 		beginTimeStr := record[beginTimeIdx]
 		beginTime, err := normalizeTime(beginTimeStr)
 		if err != nil {
-			logger.Error("failed to parse begin time", zap.String("beginTimeStr", beginTimeStr), zap.Error(err))
-			errChan <- errors.Wrapf(err, "failed to parse begin time %s", beginTimeStr)
-			return
+			logger.Debug("failed to parse begin time, try parse with format 2006-01-01 15:04:05", zap.String("beginTimeStr", beginTimeStr), zap.Error(err))
+			if beginTime, err = time.Parse("2006-01-02 15:04:05", beginTimeStr); err != nil {
+				errChan <- errors.Wrapf(err, "failed to parse begin time %s", beginTimeStr)
+				return
+			}
 		}
 		endTimeStr := record[endTimeIdx]
 		endTime, err := normalizeTime(endTimeStr)
 		if err != nil {
-			logger.Error("failed to parse end time %s", zap.String("endTimeStr", endTimeStr))
-			errChan <- errors.Wrapf(err, "failed to parse end time %s", endTimeStr)
-			return
+			logger.Debug("failed to parse end time, try parse with format 2006-01-01 15:04:05", zap.String("beginTimeStr", beginTimeStr), zap.Error(err))
+			if endTime, err = time.Parse("2006-01-02 15:04:05", beginTimeStr); err != nil {
+				errChan <- errors.Wrapf(err, "failed to parse begin time %s", beginTimeStr)
+				return
+			}
 		}
 		// TODO(zp): handle the status
 		statusStr := record[statusIdx]
@@ -114,14 +118,13 @@ func getSerialNumberColumnName() string {
 	return "root_serial"
 }
 
-func getStatusColumnName(shortStepName string) string {
-	return "result"
-}
-
 func normalizeTime(timeStr string) (time.Time, error) {
 	specs := strings.Split(timeStr, " ")
 	date := specs[0]
 	eles := strings.Split(date, "/")
+	if len(eles) != 3 {
+		return time.Time{}, errors.Errorf("want split with / get length 3 slice, but get %d, timeStr: %s", len(eles), timeStr)
+	}
 	if hours, err := strconv.Atoi(eles[1]); err != nil {
 		return time.Time{}, err
 	} else {
