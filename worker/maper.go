@@ -104,9 +104,9 @@ func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string,
 					continue
 				}
 				if fromStepInfo.GetStatus() == StepPass && toStepInfo.GetStatus() == StepPass {
-					mr.PassStepsTimeNumber[fromStep][toStep][timeSpentInterval+1] += 1
+					mr.PassStepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
 				} else {
-					mr.FailStepsTimeNumber[fromStep][toStep][timeSpentInterval+1] += 1
+					mr.FailStepsTimeNumber[fromStep][toStep][timeSpentInterval] += 1
 				}
 			}
 		}

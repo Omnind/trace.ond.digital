@@ -168,7 +168,6 @@ func writeResult(resultSet *worker.ResultSet, fullStepOrdering []string, outputF
 	// We write the header first.
 	header := []string{
 		"ProjectCode", "FromStep", "ToStep", "Status",
-		"Error Intervals",
 		"1-Days", "2-Days", "3-Days",
 		"4-Days", "5-Days", "6-Days",
 		"7-Days", ">7-Days",

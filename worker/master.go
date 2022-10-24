@@ -33,9 +33,9 @@ func (s StepsTimeCalculator) initByStepsOrdering(stepsOrdering []string, nInterv
 		s[fromStep] = make(ToStepIntervalSpent)
 		for j := i; j < len(stepsOrdering); j++ {
 			toStep := stepsOrdering[j]
-			// We make the slice with length `nInterval+2` because we should record the times that item used more than interval * nInterval.
-			// And the capactiy of slice is the same as the length, the zero is the error column.
-			s[fromStep][toStep] = make([]int, nInterval+2)
+			// We make the slice with length `nInterval+1` because we should record the times that item used more than interval * nInterval.
+			// And the capactiy of slice is the same as the length.
+			s[fromStep][toStep] = make([]int, nInterval+1)
 		}
 	}
 }
