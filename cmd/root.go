@@ -178,7 +178,7 @@ func writeResult(resultSet *worker.ResultSet, fullStepOrdering []string, outputF
 	}
 	for i := 0; i < len(fullStepOrdering); i++ {
 		fromStep := fullStepOrdering[i]
-		for j := i; j < len(fullStepOrdering); j++ {
+		for j := i + 1; j < len(fullStepOrdering); j++ {
 			toStep := fullStepOrdering[j]
 			passTimeSpentIntervals := resultSet.PassStepsTimeNumber[fromStep][toStep]
 			row := make([]string, 0, len(header))
