@@ -82,7 +82,7 @@ func handleItems(nInterval int, nHouesInOneInterval int, stepsOrdering []string,
 	for _, item := range items {
 		nStep := len(stepsOrdering)
 		for i := 0; i < nStep; i++ {
-			for j := i; j < nStep; j++ {
+			for j := i + 1; j < nStep; j++ {
 				fromStep := stepsOrdering[i]
 				toStep := stepsOrdering[j]
 				fromStepInfo, ok := item.GetStep(fromStep)
