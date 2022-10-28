@@ -23,28 +23,28 @@ func main() {
 		panic(err)
 	}
 	defer f.Close()
-	f_csv := csv.NewReader(f)
+	csvFile := csv.NewReader(f)
 
-	f_out, err := os.Create("Distribution/" + time.Now().Format("2006-01-02") + "_Distribution.csv") //ftime
+	csvOut, err := os.Create("Distribution/" + time.Now().Format("2006-01-02") + "_Distribution.csv") //ftime
 	if err != nil {
 		panic(err)
 	}
-	defer f_out.Close()
+	defer csvOut.Close()
 
-	ss, err := f_csv.Read()
+	ss, err := csvFile.Read()
 	//m := map[int]string{}
 	//for i := 16; i < len(ss); i++ {
 	//	m[i] = ss[i]
 	//}
 
 	for i := 0; i < len(ss); i++ {
-		f_out.WriteString(ss[i])
-		f_out.WriteString(",")
+		csvOut.WriteString(ss[i])
+		csvOut.WriteString(",")
 	}
-	f_out.WriteString("\n")
+	csvOut.WriteString("\n")
 
 	for {
-		ss, err = f_csv.Read()
+		ss, err = csvFile.Read()
 		if err != nil {
 			break
 		}
@@ -120,10 +120,10 @@ func main() {
 		ss[14] = strconv.Itoa(sum)
 		ss[15] = avg
 		for i := 0; i < len(ss); i++ {
-			f_out.WriteString(ss[i])
-			f_out.WriteString(",")
+			csvOut.WriteString(ss[i])
+			csvOut.WriteString(",")
 		}
-		f_out.WriteString("\n")
+		csvOut.WriteString("\n")
 	}
 
 }
