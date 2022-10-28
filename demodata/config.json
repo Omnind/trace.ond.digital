@@ -128,5 +128,5 @@
             }
         ],
     "StatusColumnName": "result",
-    "TimeInterval":1
+    "TimeInterval":24
 }
