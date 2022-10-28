@@ -51,18 +51,18 @@ func main() {
 	for i := 0; i < len(fs); i++ {
 		fs_r, err := os.Open("demodata/large1/" + fs[i].Name())
 		if err != nil {
-			log.Println("打开" + fs[i].Name() + "失败")
+			log.Println("Open" + fs[i].Name() + "Failed")
 			break
 		}
 		fs_out, err := os.Create("demodata/large/" + fs[i].Name())
 		if err != nil {
-			log.Println("创建" + fs[i].Name() + "_out.scv" + "失败")
+			log.Println("Create" + fs[i].Name() + "_out.scv" + "Failed")
 			break
 		}
 		fs_r_csv := csv.NewReader(fs_r)
 		ss, err := fs_r_csv.Read()
 		if err != nil {
-			log.Println("读取" + fs[i].Name() + "表头失败")
+			log.Println("Read Header of" + fs[i].Name() + "Failed")
 			continue
 		}
 		for j := 0; j < len(ss); j++ {

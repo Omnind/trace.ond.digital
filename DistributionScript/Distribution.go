@@ -50,21 +50,21 @@ func main() {
 		}
 		nums := make([]int, 0, 10000)
 		sum := 0
-		quan := 0
-		quan_sum := 0
-		for i, i_quan := 16, 1; i < len(ss); i, i_quan = i+1, i_quan+1 {
+		weight := 0
+		weightSum := 0
+		for i, indexWeights := 16, 1; i < len(ss); i, indexWeights = i+1, indexWeights+1 {
 			t, err := strconv.Atoi(ss[i])
 			if err != nil {
-				log.Println("字符串转数字失败")
+				log.Println("Num Transformation failed")
 				continue
 			}
 			nums = append(nums, t)
 			sum += t
-			quan += i_quan * t
-			quan_sum += i_quan
+			weight += indexWeights * t
+			weightSum += indexWeights
 		}
 
-		avg := fmt.Sprintf("%.3f", float64(quan)/float64(sum))
+		avg := fmt.Sprintf("%.3f", float64(weight)/float64(sum))
 
 		zhe := []float64{0.1, 0.25, 0.5, 0.75, 0.9}
 		th := []int{}
@@ -81,24 +81,21 @@ func main() {
 
 		max := 0
 		min := 0
-		max_i := 0
-		min_i := 0
-		sum_2 := 0
+		maxIndex := 0
+		minIndex := 0
+		sumIndex := 0
 		for i := 0; i < len(nums); i++ {
-			//if max < nums[i] {
-			//	max = nums[i]
-			//	max_i = i
-			//}
+
 			if min == 0 {
 				if nums[i] != 0 {
 					min = nums[i]
-					min_i = i
+					minIndex = i
 				}
 			}
 
-			sum_2 += nums[i]
+			sumIndex += nums[i]
 			for j := 0; j < len(th); j++ {
-				if sum_2 >= th[j] {
+				if sumIndex >= th[j] {
 					th_results[j] = i + 1
 					th[j] = math.MaxInt
 				}
@@ -108,18 +105,18 @@ func main() {
 			if max == 0 {
 				if nums[i] != 0 {
 					max = nums[i]
-					max_i = i
+					maxIndex = i
 				}
 			}
 
 		}
-		ss[7] = strconv.Itoa(min_i + 1)
+		ss[7] = strconv.Itoa(minIndex + 1)
 		ss[8] = strconv.Itoa(th_results[0])
 		ss[9] = strconv.Itoa(th_results[1])
 		ss[10] = strconv.Itoa(th_results[2])
 		ss[11] = strconv.Itoa(th_results[3])
 		ss[12] = strconv.Itoa(th_results[4])
-		ss[13] = strconv.Itoa(max_i + 1)
+		ss[13] = strconv.Itoa(maxIndex + 1)
 		ss[14] = strconv.Itoa(sum)
 		ss[15] = avg
 		for i := 0; i < len(ss); i++ {
