@@ -7,16 +7,15 @@ import (
 	"math"
 	"os"
 	"strconv"
-	"time"
 )
 
-//var (
-//	ftime string
-//)
+var (
+	ftime string
+)
 
 func main() {
-	//fmt.Println("Please enter the expected time: ")
-	//fmt.Scanln(&ftime)
+	fmt.Println("Please enter the expected time: ")
+	fmt.Scanln(&ftime)
 	//time.Now().Format("2006-01-02")
 	f, err := os.Open("test_out.csv")
 	if err != nil {
@@ -25,7 +24,7 @@ func main() {
 	defer f.Close()
 	csvFile := csv.NewReader(f)
 
-	csvOut, err := os.Create("Distribution/" + time.Now().Format("2006-01-02") + "_Distribution.csv") //ftime
+	csvOut, err := os.Create("Distribution/" + ftime + "_Distribution.csv") //ftime
 	if err != nil {
 		panic(err)
 	}
@@ -95,8 +94,8 @@ func main() {
 
 			sumIndex += nums[i]
 			for j := 0; j < len(th); j++ {
-				if sumIndex >= th[j] {
-					th_results[j] = i + 1
+				if sumIndex > th[j] {
+					th_results[j] = i
 					th[j] = math.MaxInt
 				}
 			}
@@ -110,15 +109,15 @@ func main() {
 			}
 
 		}
-		ss[7] = strconv.Itoa(minIndex + 1)
-		ss[8] = strconv.Itoa(th_results[0])
-		ss[9] = strconv.Itoa(th_results[1])
-		ss[10] = strconv.Itoa(th_results[2])
-		ss[11] = strconv.Itoa(th_results[3])
-		ss[12] = strconv.Itoa(th_results[4])
-		ss[13] = strconv.Itoa(maxIndex + 1)
-		ss[14] = strconv.Itoa(sum)
-		ss[15] = avg
+		ss[8] = strconv.Itoa(minIndex)
+		ss[9] = strconv.Itoa(th_results[0])
+		ss[10] = strconv.Itoa(th_results[1])
+		ss[11] = strconv.Itoa(th_results[2])
+		ss[12] = strconv.Itoa(th_results[3])
+		ss[13] = strconv.Itoa(th_results[4])
+		ss[14] = strconv.Itoa(maxIndex)
+		ss[15] = strconv.Itoa(sum)
+		ss[16] = avg
 		for i := 0; i < len(ss); i++ {
 			csvOut.WriteString(ss[i])
 			csvOut.WriteString(",")
